@@ -1,0 +1,12 @@
+{
+  "tasks": {
+    "bundle": "deno run --allow-net --allow-env --allow-read --allow-write scripts/bundle.ts",
+    "hooks:set": "deno run -A https://deno.land/x/denoh@v3.0.1/denoh.ts"
+  },
+  "imports": {
+    "x/emit": "https://deno.land/x/emit@0.27.0/mod.ts"
+  },
+  "githooks": {
+    "pre-commit": ["bundle", "!git add dist/"]
+  }
+}
