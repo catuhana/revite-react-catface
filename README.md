@@ -2,7 +2,7 @@
 
 React some messages that include some stuff with some emojis :3
 
-React chance is `Math.random() <= 0.1`.
+React chance is `Math.random() <= 0.2`.
 
 ## Install
 

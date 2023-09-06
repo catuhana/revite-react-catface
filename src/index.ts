@@ -1,5 +1,7 @@
-import type { Message } from "npm:revolt.js";
 import { logger } from "./logger.ts";
+import { EMOJI_MAP } from "./config.ts";
+
+import type { Message } from "npm:revolt.js";
 
 (async () => {
   let client = window.controllers
@@ -18,23 +20,44 @@ import { logger } from "./logger.ts";
   client.on("message/update", (message) => reactToMessage(message));
 
   logger(
-    "Enabled plugin :3\nTo disable the plugin, delete or disable this plugin from settings and refresh your client.",
+    "Enabled plugin :3",
+    "To disable the plugin, delete or disable this plugin from settings and refresh your client.",
   );
 });
 
 const reactToMessage = (message: Message) => {
-  if (Math.random() > 0.1) {
+  if (Math.random() > 0.2) {
     return;
   }
 
-  if (message.content?.includes("meow")) {
-    message.react("01H9HFVGV4XW694VG66A1Y0WT6");
-  } else if (
-    message.content?.includes(":3") ??
-      message.content?.includes(":01H933WCMZT4NG4DTKGMWE2M71:")
-  ) {
-    message.react("01H933WCMZT4NG4DTKGMWE2M71");
+  if (!message.content) return;
+
+  const reactions = [];
+  for (const word of message.content.split(" ")) {
+    for (const [key, value] of EMOJI_MAP.entries()) {
+      if (Array.isArray(key)) {
+        if (key.includes(word)) {
+          if (Array.isArray(value)) {
+            reactions.push(...value);
+          } else {
+            reactions.push(value);
+          }
+        }
+      } else if (key === word) {
+        if (Array.isArray(value)) {
+          reactions.push(...value);
+        } else {
+          reactions.push(value);
+        }
+      }
+    }
   }
 
-  logger(`Reacted to message ${message.url}`);
+  if (reactions.length > 0) {
+    message.react(
+      reactions.length === 1
+        ? reactions[0]
+        : reactions[~~(Math.random() * reactions.length)],
+    );
+  }
 };
